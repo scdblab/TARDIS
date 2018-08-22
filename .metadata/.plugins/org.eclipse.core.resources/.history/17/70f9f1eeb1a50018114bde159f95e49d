@@ -1,0 +1,372 @@
+package com.yahoo.ycsb.db;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.log4j.Logger;
+
+import com.meetup.memcached.CLValue;
+import com.meetup.memcached.IQException;
+import com.meetup.memcached.MemcachedClient;
+import com.yahoo.ycsb.ByteArrayByteIterator;
+import com.yahoo.ycsb.ByteIterator;
+import com.yahoo.ycsb.DBException;
+import com.yahoo.ycsb.Status;
+
+import static com.yahoo.ycsb.db.TardisYCSBConfig.*;
+import static com.yahoo.ycsb.db.MongoDbClientDelegate.isDatabaseFailed;
+
+/**
+ * MongoDB binding for YCSB framework using the MongoDB Inc. <a
+ * href="http://docs.mongodb.org/ecosystem/drivers/java/">driver</a>
+ * <p>
+ * See the <code>README.md</code> for configuration information.
+ * </p>
+ * 
+ * @author ypai
+ * @see <a href="http://docs.mongodb.org/ecosystem/drivers/java/">MongoDB Inc.
+ *      driver</a>
+ */
+public class CADSWbMongoDbClient extends CADSMongoDbClient {
+  private final Logger logger = Logger.getLogger(CADSWbMongoDbClient.class);
+  
+  //public static final ConcurrentHashMap<String, Integer> teleW = new ConcurrentHashMap<>();
+  public static final AtomicInteger dirtyDocs = new AtomicInteger(0);
+
+  public CADSWbMongoDbClient() {
+    super();
+  }
+
+  /**
+   * Get I lease for a key. If the key has a pending write, perform recover.
+   * @param mc
+   * @param key
+   * @param id
+   * @param action
+   * @return
+   * @throws DatabaseFailureException
+   */
+  private CLValue getILeaseAndRecover(
+      MemcachedClient mc, String key, 
+      int id, int action) throws DatabaseFailureException {
+    CLValue val = null;
+    
+    logger.debug("Get I lease and recover key="+key);
+
+    while (true) {
+      try {
+        val = mc.ewget(key, id);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      if (val == null) {
+        logger.fatal("Got a null value");
+        System.exit(-1);
+      }
+
+      if (!val.isPending()) {
+        logger.debug("Value has no pending buffered writes"+key);
+        break;
+      }
+      
+      if (READ_RECOVER_ALWAYS == false && val.getValue() != null) {
+          logger.debug("Value is not null.");
+          break;
+      }
+
+      boolean recover = true;
+
+      if ((cacheMode != CACHE_WRITE_BACK || (cacheMode == CACHE_WRITE_BACK && val.getValue() == null)) 
+          && READ_RECOVER && !isDatabaseFailed.get()) {
+        while (true) {
+          String tid = mc.generateSID();
+          try {         
+            TardisYCSBWorker.docRecover(mc, tid, 
+                key, id, client, null, action, read_buffer);
+            mc.ewcommit(tid, id, !recover);
+            logger.debug("Recover succeeded.");
+            numDocsRecoveredInReads.incrementAndGet();
+            //teleW.remove(key);
+            break;
+          } catch (DatabaseFailureException e) {
+            recover = false;
+            mc.ewcommit(tid, id, !recover);
+            logger.debug("Recover failed.");
+            break;
+          } catch (IQException e) {
+            numSessRetriesInReads.incrementAndGet();
+          }
+
+          sleepLeaseRetry();
+        }
+      } else {
+        recover = false;
+      }
+
+      if (!recover && val.getValue() == null) {
+        logger.debug("Value is null + Database failed.");
+        throw new DatabaseFailureException();
+      }
+      
+      if (val.getValue() != null) {
+    	  	// got the value, so return anyway
+    	  	break;
+      }
+    }
+
+    return val;
+  }
+
+  @Override
+  public Status delete(String table, String key) {
+    return client.delete(table, key);
+  }
+
+  @Override
+  public Status insert(String table, String key,
+      HashMap<String, ByteIterator> values) {
+    // put them in cache if full warm-up
+    if (TardisYCSBConfig.fullWarmUp) {
+      byte[] payload = CacheUtilities.SerializeHashMap(values);
+      try {
+        mc.set(key, payload, getHashCode(key));
+      } catch (IOException e) {
+        logger.fatal("Insert: set failed.");        
+        e.printStackTrace();
+      }
+    }    
+    
+//    return client.insert(table, key, values);
+    return Status.OK;
+  }
+
+  @Override
+  public Status read(String table, String key, Set<String> fields,
+      HashMap<String, ByteIterator> result) {
+    CLValue val = null;
+    int hashCode = getHashCode(key);
+
+    while (true) {
+      try {
+        boolean isDbFail = false;
+        try {
+          val = getILeaseAndRecover(mc, key, hashCode, ACT_READ);
+        } catch (DatabaseFailureException e) {
+          mc.releaseILeases(hashCode);
+          isDbFail = true;
+        }
+        
+        if (isDbFail)
+            return Status.SERVICE_UNAVAILABLE;
+
+        if (val == null) {
+          System.out.println("CLVal is null in read");
+          System.exit(-1);
+        }
+        
+        if (val.getValue() != null) {
+          logger.info("Cache hit.");
+          cacheHits.incrementAndGet();
+          Object obj = val.getValue();
+          CacheUtilities.unMarshallHashMap(result, (byte[])obj, read_buffer);
+          return Status.OK;
+        }
+        
+        // at this point, got cache miss
+        logger.info("Cache miss.");
+        cacheMisses.incrementAndGet();
+
+        // get doc and then set the value in the cache.
+        Status status = client.read(table, key, fields, result);
+
+        ByteArrayByteIterator x;
+        if (status == Status.SERVICE_UNAVAILABLE) {
+          mc.releaseILeases(hashCode);
+          return status;
+        }
+
+        byte[] payload = CacheUtilities.SerializeHashMap(result);
+        try {
+          mc.iqset(key, payload, hashCode);
+          logger.debug("Successfully put key "+key+" in the cache.");
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      
+        break;
+      } catch (IQException e1) { }
+
+      sleepLeaseRetry();
+    }   
+
+    return Status.OK;
+  }
+
+  @Override
+  public Status scan(String table, String startkey, int recordcount, Set<String> fields,
+      Vector<HashMap<String, ByteIterator>> result) {
+    return client.scan(table, startkey, recordcount, fields, result);
+  }
+
+  @Override
+  public Status update(String table, String key,
+      HashMap<String, ByteIterator> values) {
+    boolean addToEW = false;
+    CLValue val = null;
+    Integer hashCode = getHashCode(key);
+    
+    logger.debug("Update key "+key);
+    
+    while (true) {
+      addToEW = false;
+      String sid = mc.generateSID();
+      
+      try {
+        val = mc.ewread(sid, key, hashCode, false);
+        if (val == null) {
+          logger.fatal("Get null CLValue in update");
+          System.exit(-1);
+        }
+        
+        Boolean recover = null;
+        if (!WRITE_RECOVER) recover = false;
+        
+        if (val.isPending() || (WRITE_RECOVER == false && dirtyDocs.get() == 0)) {
+          logger.debug("Value has pending buffered writes.");
+          if (cacheMode != CACHE_WRITE_BACK && WRITE_RECOVER && !isDatabaseFailed.get()) {
+            try {
+              TardisYCSBWorker.docRecover(mc, sid, key, hashCode, 
+                  client, values, ACT_UPDATE, read_buffer);
+              numDocsRecoveredInUpdates.incrementAndGet();
+              //teleW.remove(key);
+              recover = true;
+            } catch (DatabaseFailureException e) {
+              recover = false;
+            }
+          } else {
+            recover = false;
+          } 
+        }
+        
+        // update RMW key-value pair
+        if (val.getValue() != null || WRITE_SET) {
+          logger.debug("Update cache value");
+          
+          Object obj = val.getValue();
+          HashMap<String, ByteIterator> m = new HashMap<>();
+          if (obj != null) {
+        	  	CacheUtilities.unMarshallHashMap(m, (byte[])obj, read_buffer);  
+          }
+          m.putAll(values);          
+          byte[] payload = CacheUtilities.SerializeHashMap(m);
+          mc.ewswap(sid, key, hashCode, payload);
+        }
+        
+        if (recover == null) {          
+          if (cacheMode != CACHE_WRITE_BACK && client.update(table, key, values) == Status.OK) {
+            logger.info("No recover happened. Update table successfully.");            
+            recover = true;
+          } else {
+            recover = false;
+          }
+        }
+        
+        if (!recover) {
+          logger.debug("Could not perform update on PStore. Storing buffered write.");
+          addToEW = addDeltaToPW(sid, Long.parseLong(key.replaceAll("[^0-9]", "")), values);
+        }
+        
+        mc.ewcommit(sid, hashCode, !recover);
+        logger.debug("Session committed.");
+        break;
+      } catch (IQException e) { }
+      
+      numSessRetriesInWrites.incrementAndGet();
+      sleepLeaseRetry();
+    }
+    
+    if (addToEW) {
+    	  //teleW.putIfAbsent(key, 1);
+      addUserToEW(key);
+    }
+    
+    return Status.OK;
+  }
+  
+  private boolean addDeltaToPW(String sid, long id, HashMap<String, ByteIterator> values) throws IQException {
+    CLValue val = null;
+    String pw = TardisYCSBConfig.getPWLogKey(id);
+    
+    // must perform read-modify-write to prevent the cache size going too large
+    // that exceeds memcache limit.
+    val = mc.ewread(sid, pw, getHashCode(id), false);
+    if (val == null) {
+      logger.fatal("Get pw CLVal null");
+      System.exit(-1);
+    }
+    
+    byte[] delta;
+    if (val.getValue() == null) {
+      delta = CacheUtilities.SerializeHashMap(values);
+    } else {      
+      HashMap<String, ByteIterator> m = new HashMap<>();
+      CacheUtilities.unMarshallHashMap(m, (byte[]) val.getValue(), read_buffer);
+      m.putAll(values);
+      delta = CacheUtilities.SerializeHashMap(m);
+    }
+    
+    if (delta != null) {
+      mc.ewswap(sid, pw, getHashCode(id), delta);
+      logger.debug("Added delta to PW");
+    }
+    
+    return (val.getValue() == null);
+  }
+  
+  private int hashKey(long id) {
+    return (int)(id % TardisYCSBConfig.NUM_EVENTUAL_WRITE_LOGS);
+  }
+
+  private void addUserToEW(String key) {
+    logger.debug("Add user to EW.");
+    
+    long id = Long.parseLong(key.replaceAll("[^0-9]", ""));
+    
+    String ewKey = getEWLogKey(hashKey(id));
+    int ewHashCode = getHashCode(ewKey);
+    
+    while (true) {
+      String tid = mc.generateSID();
+      try {
+        CLValue val = mc.ewappend(ewKey, ewHashCode, key+DELIMITER, tid);
+        if ((boolean)val.getValue() == false)
+          mc.ewswap(tid, ewKey, ewHashCode, DELIMITER+key+DELIMITER);
+        mc.ewcommit(tid, ewHashCode, false);
+        logger.debug("Add user to EW succeeded.");
+        break;
+      } catch (IQException e) { }
+
+      sleepLeaseRetry();
+    }
+    
+//    TimedMetrics.getInstance().add(MetricsName.METRICS_DBFAIL_MEM_OVERHEAD, ewKey.getBytes().length + (key+DELIMITER).getBytes().length);
+//    TimedMetrics.getInstance().add(MetricsName.METRICS_DIRTY_USER);
+  }
+  
+  @Override
+  public void init() throws DBException {
+    super.init();
+  }
+  
+  @Override
+  public void cleanup() throws DBException {
+    super.cleanup();
+  }
+}

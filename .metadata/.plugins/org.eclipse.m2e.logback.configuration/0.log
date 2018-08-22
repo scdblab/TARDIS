@@ -1,0 +1,66 @@
+2018-08-21 09:27:57,645 [Worker-4] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2018-08-21 09:29:41,878 [Worker-11] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using NULL lifecycle mapping for MavenProject: com.yahoo.ycsb:root:0.13.0-SNAPSHOT @ /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/pom.xml.
+2018-08-21 09:29:42,241 [Worker-11] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.yahoo.ycsb:core:0.13.0-SNAPSHOT @ /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/core/pom.xml.
+2018-08-21 09:29:42,260 [Worker-11] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using NULL lifecycle mapping for MavenProject: com.yahoo.ycsb:binding-parent:0.13.0-SNAPSHOT @ /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/binding-parent/pom.xml.
+2018-08-21 09:29:42,280 [Worker-11] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.yahoo.ycsb:datastore-specific-descriptor:0.13.0-SNAPSHOT @ /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/binding-parent/datastore-specific-descriptor/pom.xml.
+2018-08-21 09:29:42,311 [Worker-11] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.yahoo.ycsb:mongodb-binding:0.13.0-SNAPSHOT @ /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/pom.xml.
+2018-08-21 09:29:42,564 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /core/src/main/java
+2018-08-21 09:29:42,564 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /core/src/main/resources
+2018-08-21 09:29:42,565 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /core/src/test/java
+2018-08-21 09:29:43,096 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /datastore-specific-descriptor/src/main/java
+2018-08-21 09:29:43,096 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /datastore-specific-descriptor/src/main/resources
+2018-08-21 09:29:43,097 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /datastore-specific-descriptor/src/test/java
+2018-08-21 09:29:43,145 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /mongodb-binding/src/main/java
+2018-08-21 09:29:43,146 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding resource folder /mongodb-binding/src/main/resources
+2018-08-21 09:29:43,146 [Worker-11] INFO  o.e.m.j.i.AbstractJavaProjectConfigurator - Adding source folder /mongodb-binding/src/test/java
+2018-08-21 09:29:43,187 [Worker-11] INFO  o.e.m.c.i.p.ProjectConfigurationManager - Imported and configured 5 project(s) in 1 sec
+2018-08-21 09:29:44,669 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+2018-08-21 09:29:44,674 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:44,678 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2018-08-21 09:29:44,694 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:44,694 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/core/src/test/resources
+2018-08-21 09:29:44,713 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:44,713 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 1 resource
+2018-08-21 09:29:44,715 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:44,716 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/binding-parent/datastore-specific-descriptor/src/test/resources
+2018-08-21 09:29:45,108 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:45,108 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 09:29:45,113 [Worker-12] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:29:45,113 [Worker-12] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 09:56:17,354 [Worker-18] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:56:17,358 [Worker-18] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 09:56:17,359 [Worker-18] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:56:17,360 [Worker-18] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 09:56:40,719 [Worker-11] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:56:40,720 [Worker-11] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 09:56:40,721 [Worker-11] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:56:40,722 [Worker-11] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 09:57:20,440 [Worker-19] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:57:20,441 [Worker-19] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 09:57:20,443 [Worker-19] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 09:57:20,443 [Worker-19] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 12:13:36,069 [Worker-24] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 12:13:36,070 [Worker-24] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 12:13:36,071 [Worker-24] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 12:13:36,072 [Worker-24] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 18:37:34,296 [Worker-11] INFO  c.g.t.t.d.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2018-08-21 18:37:36,473 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 18:37:36,481 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 18:37:36,491 [Worker-14] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 18:37:36,492 [Worker-14] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 18:43:44,370 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 18:43:44,375 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 18:43:44,377 [Worker-15] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 18:43:44,377 [Worker-15] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 19:20:06,205 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:06,207 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 19:20:06,208 [Worker-25] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:06,209 [Worker-25] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 19:20:15,421 [Worker-4] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:15,422 [Worker-4] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 19:20:15,424 [Worker-4] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:15,424 [Worker-4] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources
+2018-08-21 19:20:27,388 [Worker-4] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:27,389 [Worker-4] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 3 resources
+2018-08-21 19:20:27,390 [Worker-4] WARN  o.e.m.c.i.embedder.EclipseLogger - Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+2018-08-21 19:20:27,391 [Worker-4] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory /Users/haoyuh/Documents/PhdUSC/dblab/tardis/YCSB/mongodb/src/test/resources

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1534868981398_1" label="root" name="root">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/binding-parent" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/YCSB" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/datastore-specific-descriptor" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/core" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/mongodb-binding" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1534868877618_0" label="Window Working Set" name="Aggregate for window 1534868877618"/>
+</workingSetManager>
