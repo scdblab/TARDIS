@@ -1,0 +1,24 @@
+scripts/
+*~
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+core/DistrStats
+jdbc/src/main/java/exec/
+/.metadata/
+.recommenders
