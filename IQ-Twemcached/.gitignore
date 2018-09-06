@@ -1,0 +1,13 @@
+src/*.o
+config.log
+src/.deps
+Makefile
+src/Makefile
+src/twemcache
+
+config.log
+config.status
+config.h
+
+.cproject
+autom4te.cache
